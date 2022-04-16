@@ -31,3 +31,6 @@ yarn-error.log*
 # juputer notebook
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+
+# .vscode
+.vscode
