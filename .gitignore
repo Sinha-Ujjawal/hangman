@@ -27,3 +27,7 @@ yarn-error.log*
 /lib/
 .bsb.lock
 .merlin
+
+# juputer notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
