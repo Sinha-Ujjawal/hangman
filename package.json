@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@rescript/react": "^0.10.3",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.0.1",
-    "@testing-library/user-event": "^13.5.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.1",
@@ -14,7 +10,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build --production",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "re:build": "rescript",
@@ -39,6 +35,10 @@
     ]
   },
   "devDependencies": {
-    "rescript": "^9.1.4"
+    "rescript": "^9.1.4",
+    "@rescript/react": "^0.10.3",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.0.1",
+    "@testing-library/user-event": "^13.5.0"
   }
 }
