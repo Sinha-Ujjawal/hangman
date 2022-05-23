@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/hangman/static/css/main.4efb37a3.css",
+    "main.js": "/hangman/static/js/main.80b6e6c0.js",
+    "static/js/27.2dc7aab3.chunk.js": "/hangman/static/js/27.2dc7aab3.chunk.js",
+    "index.html": "/hangman/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.4efb37a3.css",
+    "static/js/main.80b6e6c0.js"
+  ]
+}
