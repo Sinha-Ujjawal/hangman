@@ -12,8 +12,8 @@ type gameState =
       movesLeft: int,
       numberOfCharsToFind: int,
     })
-  | Won
-  | Hanged
+  | Won({word: string})
+  | Hanged({word: string})
 
 let initPlayGame = () => {
   let word = RandomWordGenerator.getRandomWord() -> Js.String.toUpperCase
@@ -44,7 +44,7 @@ let guess = (c, state) => {
             numberOfCharsToFind: gameData.numberOfCharsToFind - 1,
           })
           if gameData.numberOfCharsToFind == 1 {
-            Won
+            Won({word: gameData.word})
           } else {
             state'
           }
@@ -54,7 +54,7 @@ let guess = (c, state) => {
             movesLeft: gameData.movesLeft - 1
           })
           if gameData.movesLeft == 1 {
-            Hanged
+            Hanged({word: gameData.word})
           } else {
             state'
           }

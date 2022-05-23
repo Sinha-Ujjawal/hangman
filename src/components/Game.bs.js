@@ -50,23 +50,23 @@ function Game(Props) {
                   return GameState.updateGameState(/* Init */0, param);
                 }));
   };
-  if (typeof game !== "number") {
-    return React.createElement(React.Fragment, undefined, React.createElement("h3", undefined, hideChars(game.word, game.lettersCorrectlyPredicted)), alphabetInputButtons(function (alpha, param) {
-                    var partial_arg = /* Guess */{
-                      _0: alpha
-                    };
-                    return Curry._1(setGameState, (function (param) {
-                                  return GameState.updateGameState(partial_arg, param);
-                                }));
-                  }));
+  if (typeof game === "number") {
+    return playButton("Play", initPlayGame);
   }
-  switch (game) {
-    case /* Start */0 :
-        return playButton("Play", initPlayGame);
+  switch (game.TAG | 0) {
+    case /* Play */0 :
+        return React.createElement(React.Fragment, undefined, React.createElement("h3", undefined, hideChars(game.word, game.lettersCorrectlyPredicted)), React.createElement("h3", undefined, "Moved Left: " + game.movesLeft.toString()), alphabetInputButtons(function (alpha, param) {
+                        var partial_arg = /* Guess */{
+                          _0: alpha
+                        };
+                        return Curry._1(setGameState, (function (param) {
+                                      return GameState.updateGameState(partial_arg, param);
+                                    }));
+                      }));
     case /* Won */1 :
-        return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, "You Won!"), playButton("Play Again", initPlayGame));
+        return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, "You Won!"), React.createElement("div", undefined, "The word was " + game.word), playButton("Play Again", initPlayGame));
     case /* Hanged */2 :
-        return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, "You Were Hanged!"), playButton("Play Again", initPlayGame));
+        return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, "You Were Hanged!"), React.createElement("div", undefined, "The word was " + game.word), playButton("Play Again", initPlayGame));
     
   }
 }

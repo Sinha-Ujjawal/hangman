@@ -40,19 +40,22 @@ let make = () => {
 
   switch game {
     |GameState.Start => playButton("Play", initPlayGame)
-    |GameState.Won =>
+    |GameState.Won({word: word}) =>
       <>
         <div> {"You Won!" -> React.string} </div>
+        <div> {("The word was " ++ word) -> React.string} </div>
         {playButton("Play Again", initPlayGame)}
       </>
-    |GameState.Hanged =>
+    |GameState.Hanged({word: word}) =>
       <>
         <div> {"You Were Hanged!" -> React.string} </div>
+        <div> {("The word was " ++ word) -> React.string} </div>
         {playButton("Play Again", initPlayGame)}
       </>
-    |GameState.Play({word: word, lettersCorrectlyPredicted: lettersCorrectlyPredicted}) =>
+    |GameState.Play({word: word, lettersCorrectlyPredicted: lettersCorrectlyPredicted, movesLeft: movesLeft}) =>
       <>
         <h3> {hideChars(word, lettersCorrectlyPredicted) -> React.string} </h3>
+        <h3> {("Moved Left: " ++ (Js.Int.toString(movesLeft))) -> React.string} </h3>
         {alphabetInputButtons(alpha => _ => setGameState(GameState.updateGameState(GameEvents.Guess(alpha))))}
       </>
   }

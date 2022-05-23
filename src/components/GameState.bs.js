@@ -6,7 +6,8 @@ import * as RandomWordGenerator from "../utils/RandomWordGenerator/RandomWordGen
 function initPlayGame(param) {
   var word = RandomWordGenerator.getRandomWord(undefined).toUpperCase();
   var n = Belt_SetString.size(Belt_SetString.fromArray(word.split("")));
-  return /* Play */{
+  return {
+          TAG: /* Play */0,
           word: word,
           lettersCorrectlyPredicted: undefined,
           movesLeft: 7,
@@ -18,6 +19,9 @@ function guess(c, state) {
   if (typeof state === "number") {
     return state;
   }
+  if (state.TAG !== /* Play */0) {
+    return state;
+  }
   if (Belt_SetString.has(state.lettersCorrectlyPredicted, c)) {
     return state;
   }
@@ -26,14 +30,18 @@ function guess(c, state) {
     var state$p_1 = Belt_SetString.add(state.lettersCorrectlyPredicted, c);
     var state$p_2 = state.movesLeft;
     var state$p_3 = state.numberOfCharsToFind - 1 | 0;
-    var state$p = /* Play */{
+    var state$p = {
+      TAG: /* Play */0,
       word: state$p_0,
       lettersCorrectlyPredicted: state$p_1,
       movesLeft: state$p_2,
       numberOfCharsToFind: state$p_3
     };
     if (state.numberOfCharsToFind === 1) {
-      return /* Won */1;
+      return {
+              TAG: /* Won */1,
+              word: state.word
+            };
     } else {
       return state$p;
     }
@@ -42,14 +50,18 @@ function guess(c, state) {
   var state$p_1$1 = state.lettersCorrectlyPredicted;
   var state$p_2$1 = state.movesLeft - 1 | 0;
   var state$p_3$1 = state.numberOfCharsToFind;
-  var state$p$1 = /* Play */{
+  var state$p$1 = {
+    TAG: /* Play */0,
     word: state$p_0$1,
     lettersCorrectlyPredicted: state$p_1$1,
     movesLeft: state$p_2$1,
     numberOfCharsToFind: state$p_3$1
   };
   if (state.movesLeft === 1) {
-    return /* Hanged */2;
+    return {
+            TAG: /* Hanged */2,
+            word: state.word
+          };
   } else {
     return state$p$1;
   }
