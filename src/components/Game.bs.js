@@ -5,6 +5,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as GameState from "./GameState.bs.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
 
 var alphabets = Belt_Array.range(65, 90).map(function (c) {
       return Char.escaped(Char.chr(c));
@@ -26,6 +27,17 @@ function alphabetInputButtons(onClickAlpha) {
                 }));
 }
 
+function wrongGuesses(word, guesses) {
+  var filterForWrongGuess = function (guess) {
+    return word.indexOf(guess) === -1;
+  };
+  return Belt_SetString.toArray(guesses).filter(filterForWrongGuess).join(", ");
+}
+
+function showWrongGuesses(word, guesses) {
+  return React.createElement(React.Fragment, undefined, React.createElement("h3", undefined, "Wrong Guesses: " + wrongGuesses(word, guesses)));
+}
+
 function Game(Props) {
   var match = React.useState(function () {
         return /* Start */0;
@@ -42,14 +54,16 @@ function Game(Props) {
   }
   switch (game.TAG | 0) {
     case /* Play */0 :
-        return React.createElement(React.Fragment, undefined, React.createElement("h3", undefined, GameState.hideCharacters(game.word, game.guesses)), React.createElement("h3", undefined, "Moved Left: " + game.movesLeft.toString()), alphabetInputButtons(function (alpha, param) {
+        var guesses = game.guesses;
+        var word = game.word;
+        return React.createElement(React.Fragment, undefined, React.createElement("h3", undefined, GameState.hideCharacters(word, guesses)), React.createElement("h3", undefined, "Moved Left: " + game.movesLeft.toString()), alphabetInputButtons(function (alpha, param) {
                         var partial_arg = /* Guess */{
                           _0: alpha
                         };
                         return Curry._1(setGameState, (function (param) {
                                       return GameState.updateGameState(partial_arg, param);
                                     }));
-                      }));
+                      }), showWrongGuesses(word, guesses));
     case /* Won */1 :
         return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, "You Won!"), React.createElement("div", undefined, "The word was " + game.word), playButton("Play Again", initPlayGame));
     case /* Hanged */2 :
@@ -64,6 +78,8 @@ export {
   alphabets ,
   playButton ,
   alphabetInputButtons ,
+  wrongGuesses ,
+  showWrongGuesses ,
   make ,
   
 }

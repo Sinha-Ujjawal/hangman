@@ -18,6 +18,23 @@ let alphabetInputButtons = (onClickAlpha) => {
   </div>
 }
 
+let wrongGuesses = (word, guesses) => {
+  let filterForWrongGuess = (guess) => {
+    Js.String.indexOf(guess, word) == -1
+  }
+
+  guesses
+  -> Belt.Set.String.toArray
+  -> Js.Array2.filter(filterForWrongGuess)
+  -> Js.Array2.joinWith(", ")
+}
+
+let showWrongGuesses = (word, guesses) => {
+  <>
+    <h3> {("Wrong Guesses: " ++ (wrongGuesses(word, guesses))) -> React.string} </h3>
+  </>
+}
+
 @react.component
 let make = () => {
   let (game, setGameState) = React.useState(_ => GameState.Start)
@@ -42,6 +59,7 @@ let make = () => {
         <h3> {GameState.hideCharacters(word, guesses) -> React.string} </h3>
         <h3> {("Moved Left: " ++ (Js.Int.toString(movesLeft))) -> React.string} </h3>
         {alphabetInputButtons(alpha => _ => setGameState(GameState.updateGameState(GameEvents.Guess(alpha))))}
+        {showWrongGuesses(word, guesses)}
       </>
   }
 }
