@@ -8,56 +8,64 @@ type gameState =
   | Start
   | Play({
       word: string,
-      lettersCorrectlyPredicted: Belt.Set.String.t,
+      guesses: Belt.Set.String.t,
       movesLeft: int,
-      numberOfCharsToFind: int,
     })
   | Won({word: string})
   | Hanged({word: string})
 
 let initPlayGame = () => {
-  let word = RandomWordGenerator.getRandomWord() -> Js.String.toUpperCase
-  let n =
-    word
-    -> Js.String2.split("")
-    -> Belt.Set.String.fromArray
-    -> Belt.Set.String.size
- 
   Play({
-    word: word,
-    lettersCorrectlyPredicted: Belt.Set.String.empty,
+    word: RandomWordGenerator.getRandomWord() -> Js.String.toUpperCase,
+    guesses: Belt.Set.String.empty,
     movesLeft: 7,
-    numberOfCharsToFind: n
   })
+}
+
+let hideCharacters = (word: string, guesses: Belt.Set.String.t): string => {
+  let mapper = charAsStr => {
+    if Belt.Set.String.has(guesses, charAsStr) {
+      charAsStr
+    } else {
+      "*"
+    }
+  }
+
+  word
+  -> Js.String2.split("")
+  -> Js.Array2.map(mapper)
+  -> Js.String.concatMany("")
+}
+
+let guessesCoversTheWord = (word: string, guesses: Belt.Set.String.t): bool => {
+  let wordWithHiddenCharacters = hideCharacters(word, guesses)
+  wordWithHiddenCharacters == word
 }
 
 let guess = (c, state) => {
   switch state {
     |Play(gameData) =>
-      if (Belt.Set.String.has(gameData.lettersCorrectlyPredicted, c)) {
-        state
-      } else {
-        if Js.String.indexOf(c, gameData.word) != -1 {
-          let state' = Play({
-            ...gameData,
-            lettersCorrectlyPredicted: Belt.Set.String.add(gameData.lettersCorrectlyPredicted, c),
-            numberOfCharsToFind: gameData.numberOfCharsToFind - 1,
-          })
-          if gameData.numberOfCharsToFind == 1 {
-            Won({word: gameData.word})
-          } else {
-            state'
-          }
+      let newGuesses = Belt.Set.String.add(gameData.guesses, c)
+
+      if Js.String.indexOf(c, gameData.word) != -1 {
+        if guessesCoversTheWord(gameData.word, newGuesses) {
+          Won({word: gameData.word})
         } else {
-          let state' = Play({
+          Play({
             ...gameData,
-            movesLeft: gameData.movesLeft - 1
+            guesses: newGuesses,
           })
-          if gameData.movesLeft == 1 {
-            Hanged({word: gameData.word})
-          } else {
-            state'
-          }
+        }
+      } else {
+        let state' = Play({
+          ...gameData,
+          movesLeft: gameData.movesLeft - 1,
+          guesses: newGuesses,
+        })
+        if gameData.movesLeft == 1 {
+          Hanged({word: gameData.word})
+        } else {
+          state'
         }
       }
     |_ => state

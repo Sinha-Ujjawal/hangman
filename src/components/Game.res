@@ -9,21 +9,6 @@ let playButton = (message, initGame) => {
     </>
 }
 
-let hideChars = (string, chars) => {
-  let mapper = charAsStr => {
-    if Belt.Set.String.has(chars, charAsStr) {
-      charAsStr
-    } else {
-      "*"
-    }
-  }
-
-  string
-  -> Js.String2.split("")
-  -> Js.Array2.map(mapper)
-  -> Js.String.concatMany("")
-}
-
 let alphabetInputButtons = (onClickAlpha) => {
   <div onClick={%raw(`o => e => o(e.target.id)`)(onClickAlpha)}>
     {
@@ -52,9 +37,9 @@ let make = () => {
         <div> {("The word was " ++ word) -> React.string} </div>
         {playButton("Play Again", initPlayGame)}
       </>
-    |GameState.Play({word: word, lettersCorrectlyPredicted: lettersCorrectlyPredicted, movesLeft: movesLeft}) =>
+    |GameState.Play({word: word, guesses: guesses, movesLeft: movesLeft}) =>
       <>
-        <h3> {hideChars(word, lettersCorrectlyPredicted) -> React.string} </h3>
+        <h3> {GameState.hideCharacters(word, guesses) -> React.string} </h3>
         <h3> {("Moved Left: " ++ (Js.Int.toString(movesLeft))) -> React.string} </h3>
         {alphabetInputButtons(alpha => _ => setGameState(GameState.updateGameState(GameEvents.Guess(alpha))))}
       </>
